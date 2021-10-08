@@ -77,7 +77,7 @@ public:
      *
      */
 
-    static Singleton *GetInstance(const std::string& value);
+    static Singleton &GetInstance(const std::string& value);
     /**
      * EN: Finally, any singleton should define some business logic, which can
      * be executed on its instance.
@@ -110,14 +110,14 @@ std::mutex Singleton::mutex_;
      *      set the value.
      * RU: 
      */
-Singleton *Singleton::GetInstance(const std::string& value)
+Singleton &Singleton::GetInstance(const std::string& value)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     if (pinstance_ == nullptr)
     {
         pinstance_ = new Singleton(value);
     }
-    return pinstance_;
+    return *pinstance_;
 }
 
 void ThreadFoo(){
@@ -125,8 +125,8 @@ void ThreadFoo(){
     //
     // RU: Этот код эмулирует медленную инициализацию.
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    Singleton* singleton = Singleton::GetInstance("FOO");
-    std::cout << singleton->value() << "\n";
+    Singleton& singleton = Singleton::GetInstance("FOO");
+    std::cout << singleton.value() << "\n";
 }
 
 void ThreadBar(){
@@ -134,8 +134,8 @@ void ThreadBar(){
     //
     // RU: Этот код эмулирует медленную инициализацию.
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    Singleton* singleton = Singleton::GetInstance("BAR");
-    std::cout << singleton->value() << "\n";
+    Singleton& singleton = Singleton::GetInstance("BAR");
+    std::cout << singleton.value() << "\n";
 }
 
 int main()

@@ -70,7 +70,7 @@ public:
      *
      */
 
-    static Singleton *GetInstance(const std::string& value);
+    static Singleton &GetInstance(const std::string& value);
     /**
      * EN: Finally, any singleton should define some business logic, which can
      * be executed on its instance.
@@ -95,7 +95,7 @@ Singleton* Singleton::singleton_= nullptr;;
      *
      * RU: 
      */
-Singleton *Singleton::GetInstance(const std::string& value)
+Singleton &Singleton::GetInstance(const std::string& value)
 {
     /**
      * EN: This is a safer way to create an instance. instance = new Singleton is dangeruous 
@@ -106,7 +106,7 @@ Singleton *Singleton::GetInstance(const std::string& value)
     if(singleton_==nullptr){
         singleton_ = new Singleton(value);
     }
-    return singleton_;
+    return *singleton_;
 }
 
 void ThreadFoo(){
@@ -114,8 +114,8 @@ void ThreadFoo(){
     //
     // RU: Этот код эмулирует медленную инициализацию.
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    Singleton* singleton = Singleton::GetInstance("FOO");
-    std::cout << singleton->value() << "\n";
+    Singleton& singleton = Singleton::GetInstance("FOO");
+    std::cout << singleton.value() << "\n";
 }
 
 void ThreadBar(){
@@ -123,8 +123,8 @@ void ThreadBar(){
     //
     // RU: Этот код эмулирует медленную инициализацию.
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    Singleton* singleton = Singleton::GetInstance("BAR");
-    std::cout << singleton->value() << "\n";
+    Singleton& singleton = Singleton::GetInstance("BAR");
+    std::cout << singleton.value() << "\n";
 }
 
 
